@@ -1,21 +1,31 @@
-CREATE TYPE NOTICIA_T AS OBJECT (
-    codigo_noticia NUMBER,
-    fecha_publicacion DATE,
-    numero_dias NUMBER,
-    texto VARCHAR2(3000),
-    MEMBER FUNCTION publicada RETURN BOOLEAN
+// SE USAN NUMBERS?
+
+CREATE OR REPLACE TYPE alumno_t AS OBJECT(
+DNI VARCHAR2(9),
+nota_ev_1 NUMBER,
+nota_ev_2 NUMBER,
+nota_ev_3 NUMBER,
+MEMBER FUNCTION calcMedia RETURN NUMBER,
+MEMBER FUNCTION calcMediaPond(porcentaje1 NUMBER, porcentaje2 NUMBER, porcentaje3 NUMBER)
 );
 
-CREATE OR REPLACE TYPE BODY NOTICIA_T AS
-  MEMBER FUNCTION publicada RETURN BOOLEAN IS
-  is_publicada BOOLEAN;
-  fecha_actual DATE;
-  BEGIN
-    fecha_actual:=SYSDATE;
-    is_publicada:=FALSE;
-    IF (fecha_publicacion>fecha_actual)
-    THEN RETURN TRUE;
-    END IF;
-    RETURN FALSE;
-  END;
+CREATE OR REPLACE TYPE BODY alumno_t AS
+MEMBER FUNCTION calcMedia RETURN NUMBER IS
+	media NUMBER;
+	BEGIN
+		media:=(nota_ev_3 + nota_ev_2 + nota_ev_1)/3;
+		return TRUNC(media);
+	END;
+MEMBER FUNCTION calcMediaPond(porcentaje1 NUMBER, porcentaje2 NUMBER, porcentaje3 NUMBER) RETURN NUMBER IS
+	media NUMBER;
+	porcentajeDecimal1 NUMBER;
+	porcentajeDecimal2 NUMBER;
+	porcentajeDecimal3 NUMBER;
+	BEGIN
+		porcentajeDecimal1:= porcentaje1/100;
+		porcentajeDecimal2:= porcentaje2/100;
+		porcentajeDecimal3:= porcentaje3/100;
+		return ((nota_ev_1 * porcentajeDecimal1) + (nota_ev_2 * porcentajeDecimal2) + (nota_ev_2 * porcentajeDecimal2));
+
+	END;
 END;
