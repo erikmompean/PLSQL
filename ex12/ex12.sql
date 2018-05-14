@@ -19,3 +19,57 @@ BEGIN
     dbms_output.put_line(student.name || ' es mas joven');
     END IF;
 END;
+
+-- b. Crea una tabla de objetos del tipo person_t (PK idno) con los siguientes
+-- registros
+
+CREATE TABLE person_table(
+	person person_typ,
+	CONSTRAINT pk_student PRIMARY KEY (person.idno)
+);
+
+INSERT INTO person_table (person) VALUES (PERSON_TYP(12, 'ISMAEL', 'BELTRAN', TO_DATE('15/02/1995', 'dd/MM/yyyy'), '22446688'));
+INSERT INTO person_table (person) VALUES (PERSON_TYP(27, 'BERTA', 'MATEO', TO_DATE('23/09/1991', 'dd/MM/yyyy'), '22446688'));
+INSERT INTO person_table (person) VALUES (PERSON_TYP(29, 'GONZALO', 'CASANOVA', TO_DATE('06/05/1993', 'dd/MM/yyyy'), '22446688'));
+
+INSERT INTO person_table (person) VALUES (student_typ(15, 'FRANCISCO', 'SUAREZ', TO_DATE('15/02/1990', 'dd/MM/yyyy'), '22446688', 'LA SALLE GRACIA', 9.0));
+INSERT INTO person_table (person) VALUES (student_typ(20, 'JOSE', 'PEREZ', TO_DATE('23/09/1992', 'dd/MM/yyyy'), '22446688', 'LA SALLE GRACIA', 7.5));
+
+INSERT INTO person_table (person) VALUES (student_parcial_t(24, 'JAVIER', 'GARCIA', TO_DATE('20/05/1990', 'dd/MM/yyyy'), '22446688', 'LA SALLE GRACIA', 9.0, 317));
+INSERT INTO person_table (person) VALUES (student_parcial_t(25, 'ELENA', 'CASTELLANOS', TO_DATE('23/10/1990', 'dd/MM/yyyy'), '22446688', 'LA SALLE GRACIA', 7.5, 317));
+
+-- c. Muestra por pantalla los datos (get_datos) de los estudiantes (sólo
+-- estudiantes) ordenados por fecha de nacimiento (birth)
+
+set serveroutput on;
+DECLARE
+	person person_typ;
+	CURSOR person_cursor IS
+		SELECT person FROM person_table where person is of (student_typ) ORDER BY person.birth;
+BEGIN
+	OPEN person_cursor;
+	LOOP
+		FETCH person_cursor INTO person;
+		EXIT WHEN person_cursor%NOTFOUND;
+
+		DBMS_OUTPUT.PUT_LINE(person.get_datos());
+	END LOOP;
+END;
+
+-- Muestra por pantalla los datos (get_datos) de los estudiantes a tiempo parcial
+-- ordenados por fecha de nacimiento (birth)
+
+set serveroutput on;
+DECLARE
+	person person_typ;
+	CURSOR person_cursor IS
+		SELECT person FROM person_table where person is of (student_parcial_t) ORDER BY person.birth;
+BEGIN
+	OPEN person_cursor;
+	LOOP
+		FETCH person_cursor INTO person;
+		EXIT WHEN person_cursor%NOTFOUND;
+
+		DBMS_OUTPUT.PUT_LINE(person.get_datos());
+	END LOOP;
+END;
