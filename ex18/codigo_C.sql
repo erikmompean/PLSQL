@@ -1,0 +1,5 @@
+INSERT INTO TABLE (SELECT P.BLUEPRINTS
+                   FROM PROJECTS_TAB P
+                   WHERE P.PROJECT_NAME LIKE 'Proyecto Uno')
+VALUES (BLUEPRINT_T(4, 'REPLANTEO INICIAL', ENGINEER_T('Ingeniero G', 'Ingeniero H')));
+
